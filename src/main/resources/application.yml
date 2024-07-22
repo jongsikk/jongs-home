@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: Influx-API
+
+  influxdb:
+    url: http://192.168.0.100:8086
+    username: homeassistant
+    password: homeassistant
+    database: homeassistant
