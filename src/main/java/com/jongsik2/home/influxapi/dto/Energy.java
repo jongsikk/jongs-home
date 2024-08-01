@@ -15,10 +15,12 @@ import java.time.Instant;
 @AllArgsConstructor
 @Measurement(name = "kWh")
 public class Energy {
-    @Column(name = "friendly_name_str")
-    String name;
-    @Column(name = "value")
-    Double value;
     @Column(name = "time")
     Instant time;
+    @Column(name = "friendly_name_str")
+    String name;
+    @Column(name = "entity_id")
+    String entityId;
+    @Column(name = "value")
+    Double value;
 }

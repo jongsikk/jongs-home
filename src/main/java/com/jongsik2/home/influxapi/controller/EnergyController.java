@@ -16,6 +16,11 @@ import java.util.List;
 public class EnergyController {
     private final EnergyService energyService;
 
+    @GetMapping(value = "/devices")
+    public List<Energy> energyDeviceList() {
+        return energyService.energyDeviceList();
+    }
+
     @GetMapping
     public List<Energy> energyList(@RequestParam String entityId) {
         return energyService.energy(entityId);
