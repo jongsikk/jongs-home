@@ -1,7 +1,7 @@
 package com.jongsik2.home.influxapi.controller;
 
 import com.jongsik2.home.influxapi.dto.Energy;
-import com.jongsik2.home.influxapi.service.EnergyService;
+import com.jongsik2.home.influxapi.service.impl.EnergyServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,15 +14,15 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/energy")
 public class EnergyController {
-    private final EnergyService energyService;
+    private final EnergyServiceImpl energyServiceImpl;
 
     @GetMapping(value = "/devices")
     public List<Energy> energyDeviceList() {
-        return energyService.energyDeviceList();
+        return energyServiceImpl.energyDeviceList();
     }
 
     @GetMapping
     public List<Energy> energyList(@RequestParam String entityId) {
-        return energyService.energy(entityId);
+        return energyServiceImpl.energy(entityId);
     }
 }
