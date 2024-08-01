@@ -1,0 +1,5 @@
+### 전력량 가져오기
+GET localhost:8080/api/v1/energy?entityId=plug_3_energy
+
+### 전력량 장치 리스트 가져오기
+GET localhost:8080/api/v1/energy/devices
