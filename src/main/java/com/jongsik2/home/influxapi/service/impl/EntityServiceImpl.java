@@ -21,7 +21,13 @@ public class EntityServiceImpl implements EntityService {
     @Override
     public List<Entity> entityList() {
         InfluxDBResultMapper mapper = new InfluxDBResultMapper();
-        String s = "SELECT DISTINCT \"friendly_name_str\" AS friendly_name_str FROM state WHERE time > now() - 12h AND time < now() GROUP BY \"entity_id\"";
+        String s = "SELECT LAST(\"friendly_name_str\") AS friendly_name_str, " +
+                "LAST(\"state\") AS state, " +
+                "LAST(\"battery\") AS battery, " +
+                "LAST(\"linkquality\") AS linkquality " +
+                "FROM state " +
+                "WHERE time > now() - 6h AND time < now() " +
+                "GROUP BY \"entity_id\"";
         Query query = BoundParameterQuery.QueryBuilder.newQuery(s)
                 .forDatabase("homeassistant")
                 .create();
