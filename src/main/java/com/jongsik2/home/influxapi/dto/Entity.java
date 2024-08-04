@@ -17,4 +17,10 @@ public class Entity {
     String name;
     @Column(name = "entity_id")
     String entityId;
+    @Column(name = "state")
+    String state;
+    @Column(name = "battery")
+    Double battery;
+    @Column(name = "linkquality")
+    int linkQuality;
 }
