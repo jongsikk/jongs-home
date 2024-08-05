@@ -1,11 +1,11 @@
 package com.jongsik2.home.influxapi.service;
 
-import com.jongsik2.home.influxapi.dto.Energy;
+import com.jongsik2.home.influxapi.dto.EnergyDto;
 
 import java.util.List;
 
 public interface EnergyService {
-    List<Energy> energyDeviceList();
+    List<EnergyDto> energyDeviceList();
 
-    List<Energy> energy(String entityId);
+    List<EnergyDto> energy(String entityId);
 }
