@@ -1,4 +1,4 @@
-package com.jongsik2.home.influxapi.dto;
+package com.jongsik2.home.influxapi.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
