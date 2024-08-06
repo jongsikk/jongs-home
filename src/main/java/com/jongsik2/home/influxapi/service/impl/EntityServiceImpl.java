@@ -29,7 +29,7 @@ public class EntityServiceImpl implements EntityService {
                 "LAST(\"linkquality\") AS linkquality " +
                 "FROM state " +
                 "WHERE time > now() - 6h AND time < now() " +
-                "GROUP BY \"entity_id\"";
+                "GROUP BY \"entity_id\", \"domain\"";
         Query query = BoundParameterQuery.QueryBuilder.newQuery(s)
                 .forDatabase("homeassistant")
                 .create();

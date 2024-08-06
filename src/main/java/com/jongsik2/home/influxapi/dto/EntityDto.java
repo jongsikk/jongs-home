@@ -11,6 +11,7 @@ import org.mapstruct.factory.Mappers;
 @Setter
 @AllArgsConstructor
 public class EntityDto {
+    String domain;
     String name;
     String entityId;
     String state;

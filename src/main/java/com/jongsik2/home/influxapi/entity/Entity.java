@@ -13,6 +13,8 @@ import org.influxdb.annotation.Measurement;
 @AllArgsConstructor
 @Measurement(name = "state")
 public class Entity {
+    @Column(name = "domain")
+    String domain;
     @Column(name = "friendly_name_str")
     String name;
     @Column(name = "entity_id")
