@@ -1,4 +1,4 @@
-package com.jongsik2.home.influxapi.dto;
+package com.jongsik2.home.influxapi.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,20 +7,20 @@ import lombok.Setter;
 import org.influxdb.annotation.Column;
 import org.influxdb.annotation.Measurement;
 
-import java.time.Instant;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Measurement(name = "kWh")
-public class Energy {
-    @Column(name = "time")
-    Instant time;
+@Measurement(name = "state")
+public class Entity {
     @Column(name = "friendly_name_str")
     String name;
     @Column(name = "entity_id")
     String entityId;
-    @Column(name = "value")
-    Double value;
+    @Column(name = "state")
+    String state;
+    @Column(name = "battery")
+    Double battery;
+    @Column(name = "linkquality")
+    int linkQuality;
 }
