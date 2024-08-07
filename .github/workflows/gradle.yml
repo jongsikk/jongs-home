@@ -32,3 +32,16 @@ jobs:
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker build -t ${{ secrets.DOCKER_REPO }} .
         docker push ${{ secrets.DOCKER_REPO }}
+        
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_IP }}
+        username: ${{ secrets.SSH_ID }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          docker rm -f $(docker ps -q -f "name=Influx-API")
+          docker rmi $(docker images ${{ secrets.DOCKER_REPO }} -q)
+          docker pull ${{ secrets.DOCKER_REPO }}
+          docker run -d -p 8080:8080 --name Influx-API ${{ secrets.DOCKER_REPO }}
