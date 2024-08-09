@@ -7,3 +7,8 @@ spring:
     username: homeassistant
     password: homeassistant
     database: homeassistant
+
+mqtt:
+  url: tcp://192.168.0.100:1883
+  username: jongsik2
+  password: jongsik2
