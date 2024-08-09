@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class InfluxApiApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(InfluxApiApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(InfluxApiApplication.class, args);
+	}
 
 }
