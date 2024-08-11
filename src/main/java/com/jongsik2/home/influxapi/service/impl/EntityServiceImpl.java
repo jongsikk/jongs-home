@@ -1,43 +1,60 @@
 package com.jongsik2.home.influxapi.service.impl;
 
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.query.dsl.Flux;
 import com.jongsik2.home.influxapi.dto.EntityDto;
 import com.jongsik2.home.influxapi.entity.Entity;
 import com.jongsik2.home.influxapi.service.EntityService;
 import lombok.RequiredArgsConstructor;
-import org.influxdb.dto.BoundParameterQuery;
-import org.influxdb.dto.Point;
-import org.influxdb.dto.Query;
-import org.influxdb.dto.QueryResult;
-import org.influxdb.impl.InfluxDBResultMapper;
-import org.springframework.data.influxdb.InfluxDBTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.influxdb.query.dsl.functions.restriction.Restrictions.*;
 
 @Service
 @RequiredArgsConstructor
 public class EntityServiceImpl implements EntityService {
-    private final InfluxDBTemplate<Point> influxDBTemplate;
+    private final InfluxDBClient influxDBClient;
+    private static final String BUCKET = "homeassistant";
+    private static final String MEASUREMENT = "units";
 
     @Override
     public List<EntityDto> entityList() {
-        InfluxDBResultMapper mapper = new InfluxDBResultMapper();
-        String s = "SELECT LAST(\"friendly_name_str\") AS friendly_name_str, " +
-                "LAST(\"state\") AS state, " +
-                "LAST(\"battery\") AS battery, " +
-                "LAST(\"linkquality\") AS linkquality " +
-                "FROM state " +
-                "WHERE time > now() - 6h AND time < now() " +
-                "GROUP BY \"entity_id\", \"domain\"";
-        Query query = BoundParameterQuery.QueryBuilder.newQuery(s)
-                .forDatabase("homeassistant")
-                .create();
-        QueryResult result = influxDBTemplate.query(query);
+        Flux linkquality = Flux.from(BUCKET)
+                .range(-1L, ChronoUnit.HOURS)
+                .filter(and(
+                        measurement().equal(MEASUREMENT),
+                        field().equal("linkquality")))
+                .last();
+        Flux friendlyNameStr = Flux.from(BUCKET)
+                .range(-1L, ChronoUnit.HOURS)
+                .filter(and(
+                        measurement().equal(MEASUREMENT),
+                        field().equal("friendly_name_str")))
+                .last();
+        Flux state = Flux.from(BUCKET)
+                .range(-1L, ChronoUnit.HOURS)
+                .filter(and(
+                        measurement().equal(MEASUREMENT),
+                        field().equal("state")))
+                .last();
+        Flux battery = Flux.from(BUCKET)
+                .range(-1L, ChronoUnit.HOURS)
+                .filter(and(
+                        measurement().equal(MEASUREMENT),
+                        field().equal("battery")))
+                .last();
 
-        return mapper.toPOJO(result, Entity.class)
+        Flux query = Flux.union(linkquality, friendlyNameStr, state, battery)
+                .pivot(new String[]{"_time"}, new String[]{"_field"}, "_value")
+                .groupBy("_measurement");
+
+        return influxDBClient.getQueryApi()
+                .query(query.toString(), Entity.class)
                 .stream()
                 .map(EntityDto::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 }
