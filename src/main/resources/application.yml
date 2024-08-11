@@ -1,14 +1,14 @@
 spring:
   application:
     name: Influx-API
+  profiles:
+    active: prod
 
   influxdb:
-    url: http://192.168.0.100:8086
-    username: homeassistant
-    password: homeassistant
-    database: homeassistant
+    token: PN9kPT8ZwlyJwj9tCNSwe9jj4MIdc0SATVq1cpHhqDN4-tfkiQIm-BkyKJlCDPolrDdei63JSan1TN_QejUPUQ==
+    org: HA
+    bucket: homeassistant
 
 mqtt:
-  url: tcp://192.168.0.100:1883
   username: jongsik2
   password: jongsik2
