@@ -1,11 +1,10 @@
 package com.jongsik2.home.influxapi.entity;
 
+import com.influxdb.annotations.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.influxdb.annotation.Column;
-import org.influxdb.annotation.Measurement;
 
 import java.time.Instant;
 
@@ -13,7 +12,6 @@ import java.time.Instant;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Measurement(name = "kWh")
 public class Energy {
     @Column(name = "time")
     Instant time;
