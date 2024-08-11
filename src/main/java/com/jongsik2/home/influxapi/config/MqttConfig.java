@@ -35,7 +35,7 @@ public class MqttConfig {
 
         return factory;
     }
-
+ 
     @Bean
     @ServiceActivator(inputChannel = "mqttOutboundChannel")
     public MessageHandler mqttOutBound() {
