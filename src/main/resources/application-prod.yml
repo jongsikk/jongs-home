@@ -1,6 +1,6 @@
 spring:
   influxdb:
-    url: http://host.docker.internal:8086
+    url: http://192.168.0.100:8086
 
 mqtt:
-  url: tcp://host.docker.internal:1883
+  url: tcp://192.168.0.100:1883
