@@ -17,6 +17,7 @@ public class EntityDto {
     String state;
     Double battery;
     int linkQuality;
+    Double value;
 
     public static EntityDto toDto(Entity energy) {
         return EntityDto.EntityDtoMapper.INSTANCE.toDto(energy);

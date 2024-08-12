@@ -23,4 +23,6 @@ public class Entity {
     Double battery;
     @Column(name = "linkquality")
     int linkQuality;
+    @Column(name = "value")
+    Double value;
 }
