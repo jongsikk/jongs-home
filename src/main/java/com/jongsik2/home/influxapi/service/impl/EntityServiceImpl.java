@@ -11,45 +11,47 @@ import org.springframework.stereotype.Service;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static com.influxdb.query.dsl.functions.restriction.Restrictions.*;
+import static com.influxdb.query.dsl.functions.restriction.Restrictions.and;
+import static com.influxdb.query.dsl.functions.restriction.Restrictions.field;
 
 @Service
 @RequiredArgsConstructor
 public class EntityServiceImpl implements EntityService {
     private final InfluxDBClient influxDBClient;
     private static final String BUCKET = "homeassistant";
-    private static final String MEASUREMENT = "units";
 
     @Override
     public List<EntityDto> entityList() {
         Flux linkquality = Flux.from(BUCKET)
                 .range(-1L, ChronoUnit.HOURS)
                 .filter(and(
-                        measurement().equal(MEASUREMENT),
                         field().equal("linkquality")))
                 .last();
         Flux friendlyNameStr = Flux.from(BUCKET)
                 .range(-1L, ChronoUnit.HOURS)
                 .filter(and(
-                        measurement().equal(MEASUREMENT),
                         field().equal("friendly_name_str")))
                 .last();
         Flux state = Flux.from(BUCKET)
                 .range(-1L, ChronoUnit.HOURS)
                 .filter(and(
-                        measurement().equal(MEASUREMENT),
                         field().equal("state")))
                 .last();
         Flux battery = Flux.from(BUCKET)
                 .range(-1L, ChronoUnit.HOURS)
                 .filter(and(
-                        measurement().equal(MEASUREMENT),
                         field().equal("battery")))
                 .last();
+        Flux value = Flux.from(BUCKET)
+                .range(-1L, ChronoUnit.HOURS)
+                .filter(and(
+                        field().equal("value")))
+                .last();
 
-        Flux query = Flux.union(linkquality, friendlyNameStr, state, battery)
+        Flux query = Flux.union(linkquality, friendlyNameStr, state, battery, value)
                 .pivot(new String[]{"_time"}, new String[]{"_field"}, "_value")
-                .groupBy("_measurement");
+                .groupBy("_value")
+                .sort(new String[]{"friendly_name_str"});
 
         return influxDBClient.getQueryApi()
                 .query(query.toString(), Entity.class)
