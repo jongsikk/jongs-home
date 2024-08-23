@@ -12,6 +12,7 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 public class EntityDto {
     String domain;
+    String measurement;
     String name;
     String entityId;
     String state;
