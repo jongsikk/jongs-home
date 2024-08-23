@@ -13,6 +13,8 @@ import lombok.Setter;
 public class Entity {
     @Column(name = "domain")
     String domain;
+    @Column(name = "_measurement")
+    String measurement;
     @Column(name = "friendly_name_str")
     String name;
     @Column(name = "entity_id")
