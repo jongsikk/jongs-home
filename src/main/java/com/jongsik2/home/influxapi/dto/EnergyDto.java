@@ -22,7 +22,7 @@ public class EnergyDto {
         return EnergyDtoMapper.INSTANCE.toDto(energy);
     }
 
-    public static Energy toEnergy(EnergyDto energyDto) {
+    public static Energy toEntity(EnergyDto energyDto) {
         return EnergyDtoMapper.INSTANCE.toEntity(energyDto);
     }
 
