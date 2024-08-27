@@ -23,27 +23,27 @@ public class EntityServiceImpl implements EntityService {
     @Override
     public List<EntityDto> entityList() {
         Flux linkquality = Flux.from(BUCKET)
-                .range(-1L, ChronoUnit.HOURS)
+                .range(-1L, ChronoUnit.DAYS)
                 .filter(and(
                         field().equal("linkquality")))
                 .last();
         Flux friendlyNameStr = Flux.from(BUCKET)
-                .range(-1L, ChronoUnit.HOURS)
+                .range(-1L, ChronoUnit.DAYS)
                 .filter(and(
                         field().equal("friendly_name_str")))
                 .last();
         Flux state = Flux.from(BUCKET)
-                .range(-1L, ChronoUnit.HOURS)
+                .range(-1L, ChronoUnit.DAYS)
                 .filter(and(
                         field().equal("state")))
                 .last();
         Flux battery = Flux.from(BUCKET)
-                .range(-1L, ChronoUnit.HOURS)
+                .range(-1L, ChronoUnit.DAYS)
                 .filter(and(
                         field().equal("battery")))
                 .last();
         Flux value = Flux.from(BUCKET)
-                .range(-1L, ChronoUnit.HOURS)
+                .range(-1L, ChronoUnit.DAYS)
                 .filter(and(
                         field().equal("value")))
                 .last();
