@@ -21,7 +21,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(Model model) {
-        List<String> measurementList = List.of("kWh", "units", "%");
+        List<String> domainList = List.of("sensor", "switch", "light", "binary_sensor", "number");
         List<Energy> energyList = energyService.energyDeviceList()
                 .stream()
                 .map(EnergyDto::toEntity)
@@ -31,7 +31,7 @@ public class IndexController {
                 .map(EntityDto::toEntity)
                 .toList();
 
-        model.addAttribute("measurementList", measurementList);
+        model.addAttribute("domainList", domainList);
         model.addAttribute("energyList", energyList);
         model.addAttribute("entityList", entityList);
         return "index";

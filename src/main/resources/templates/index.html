@@ -17,6 +17,7 @@
 
     <!-- Custom styles for this template-->
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="/css/toggle-switch.css" rel="stylesheet">
     <script src="/js/index-page.js"></script>
 </head>
 
@@ -34,10 +35,10 @@
             <!-- Begin Page Content -->
             <div id="main-container" class="container-fluid">
                 <!-- Content Row -->
-                <div th:each="measurement : ${measurementList}">
-                    <h3 th:text="${measurement}" class="text-lg font-weight-bold mb-3"></h3>
+                <div th:each="domain : ${domainList}">
+                    <h3 th:text="${domain}" class="text-lg font-weight-bold mb-3"></h3>
                     <div class="row">
-                        <div th:each="entity : ${entityList}" th:if="${entity.getMeasurement().equals(measurement)}"
+                        <div th:each="entity : ${entityList}" th:if="${entity.getDomain().equals(domain)}"
                              class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-primary shadow h-100 py-2">
                                 <div class="card-body">
@@ -45,11 +46,23 @@
                                         <div class="col mr-2">
                                             <div th:text="${entity.getName()}"
                                                  class="text-xs font-weight-bold text-primary text-uppercase mb-1"></div>
-                                            <div th:text="${entity.getMeasurement() == 'units' ? (entity.getValue() == 1.0 ? 'on' : 'off') : (entity.getValue() + '' + entity.getMeasurement())}"
-                                                 class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                            <div th:text="${entity.getMeasurement() == 'units' ?
+                                                             (entity.getDomain() == 'number' ? entity.getValue() :
+                                                             (entity.getDomain() == 'binary_sensor' ?
+                                                                 (entity.getValue() == 'on' ? 'open' : 'close') :
+                                                                 entity.getState())) : (entity.getValue() + ' ' + entity.getMeasurement())}"
+                                                 class="h5 mb-0 font-weight-bold text-gray-800"
+                                                 th:id="${entity.getEntityId()} + ':' + ${entity.getName()}"></div>
                                         </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                        <div class="col-auto"
+                                             th:if="${entity.getDomain() == 'switch' || entity.getDomain() == 'light'}">
+                                            <input type="checkbox" hidden>
+                                            <label th:for="${entity.getName()}"
+                                                   th:id="${entity.getEntityId()} + ':' + ${entity.getName()}"
+                                                   th:class="${entity.getState() == 'off' ? 'toggleSwitch blue' : 'toggleSwitch blue active'}"
+                                                   th:value="${entity.state}">
+                                                <span class="toggleButton"></span>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -97,5 +110,34 @@
 </div>
 
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const toggleList = document.querySelectorAll(".toggleSwitch");
 
+        toggleList.forEach(($toggle) => {
+            $toggle.onclick = () => {
+                const currentState = $toggle.classList.contains('active') ? 'on' : 'off';
+                const newState = currentState === 'on' ? 'off' : 'on';
+                const splitId = $toggle.id.split(':');
+                const entityId = splitId[0];
+                const name = entityId.split('_').length === 3 ? splitId[1] + '/' + entityId.split('_')[2] : splitId[1];
+                console.log(name);
+                // 상태 업데이트
+                $toggle.classList.toggle('active');
+
+                // 요청 보내기
+                fetch('/api/v1/control', {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        topic: `zigbee2mqtt/${name}/set`,
+                        payload: newState === 'on' ? 'ON' : 'OFF'
+                    })
+                });
+            }
+        });
+    });
+</script>
 </html>
